@@ -25,11 +25,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// server.get("/", (req, res) => {
-//   console.log("req", req.query.data);
-//   res.send(req.query.data + " Hello World!");
-// });
-
 httpServer.listen(port, () => {
   console.log(`app listening on port ${port}!`);
 });
