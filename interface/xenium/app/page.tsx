@@ -1,6 +1,11 @@
-import JoinRoomPage from "@/pages/JoinRoomPage"
+import JoinRoomPage from '@/pages/JoinRoomPage/JoinRoomPage'
+import SocketProvider from '@/app/context/socket/socketProvider'
 
 const Home = () => {
-  return <JoinRoomPage/>
+  return (
+    <SocketProvider>
+      <JoinRoomPage />
+    </SocketProvider>
+  )
 }
 export default Home
