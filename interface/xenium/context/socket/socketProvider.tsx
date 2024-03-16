@@ -2,13 +2,14 @@
 
 import React, { useState, ReactNode, useCallback } from 'react'
 import io, { Socket } from 'socket.io-client'
-import SocketContext from '@/app/context/socket/socketContext'
+import SocketContext from '@/context/socket/socketContext'
 
 type SocketProviderProps = {
   children: ReactNode
 }
 
 const SocketProvider = ({ children }: SocketProviderProps) => {
+  console.log("calling abcd")
   const [socket, setSocket] = useState<Socket | null>(null)
   const [room, setRoom] = useState<string>('')
   const joinRoom = useCallback(

@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect, useContext } from 'react'
-import SocketContext from '@/app/context/socket/socketContext' // Adjust the import path as necessary
-import './JoinRoomPage.css'
+import SocketContext from '@/context/socket/socketContext' // Adjust the import path as necessary
+import './style.css'
 // import clientHelper from '@/app/api/clientHelper'
 
 const JoinRoomPage = () => {
