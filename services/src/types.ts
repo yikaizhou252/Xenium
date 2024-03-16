@@ -3,6 +3,10 @@ export interface User {
   name: string
 }
 
-export interface RoomUsers {
-  [roomId: string]: User[]
+export interface roomStatus {
+  onlineUsers: User[]
+  
+}
+export interface RoomStatuses {
+  [roomId: string]: roomStatus
 }

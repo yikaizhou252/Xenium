@@ -1,7 +1,7 @@
 import express from 'express'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
-import { User, RoomUsers } from './types' // Adjust the import path as necessary
+import { User, RoomStatuses } from './types' // Adjust the import path as necessary
 const app = express()
 const httpServer = createServer(app)
 
@@ -12,7 +12,7 @@ const io = new Server(httpServer, {
   },
 })
 
-const roomUsers: RoomUsers = {}
+const roomStatuses: RoomStatuses = {}
 
 io.on('connection', (socket) => {
   console.log('new connection: ', socket.id)
@@ -20,15 +20,17 @@ io.on('connection', (socket) => {
   socket.on('joinRoom', (userName, roomId) => {
     socket.join(roomId)
 
-    if (!roomUsers[roomId]) {
-      roomUsers[roomId] = []
+    if (!roomStatuses[roomId]) {
+      roomStatuses[roomId] = { onlineUsers: [] }
     }
 
-    if (roomUsers[roomId].some((user) => user.id === socket.id)) {
+    if (
+      roomStatuses[roomId].onlineUsers.some((user) => user.id === socket.id)
+    ) {
       console.log(`user ${userName} re-entered`)
       return
     }
-    roomUsers[roomId].push({ id: socket.id, name: userName })
+    roomStatuses[roomId].onlineUsers.push({ id: socket.id, name: userName })
 
     // response for user redirection
     socket.emit('joinedRoom', roomId)
@@ -37,34 +39,47 @@ io.on('connection', (socket) => {
       .to(roomId)
       .emit('userJoined', `${userName} has joined room ${roomId}`)
 
-    console.log('room status', roomUsers)
+    console.log('room status', JSON.stringify(roomStatuses))
+  })
+
+  // Handle messages from clients
+  socket.on('message', ({ text, roomId }) => {
+    const user = roomStatuses[roomId].onlineUsers.find(
+      (user) => user.id === socket.id
+    )
+    if (!user) {
+      console.log(`user not found, must be a bug`)
+      return
+    }
+    console.log(
+      `received message from ${user.name} in room ${roomId}: ${text}`
+    )
+    // io.to broadcasts to all users in same room
+    // socket.to broadcasts to all users except for the sender
+    io.to(roomId).emit('message', { userName: user.name, text })
   })
 
   // Handle disconnected clients
   socket.on('disconnect', () => {
     console.log('User disconnected: ', socket.id)
-    Object.keys(roomUsers).forEach((roomId) => {
-      const index = roomUsers[roomId].findIndex((user) => user.id === socket.id)
+    Object.keys(roomStatuses).forEach((roomId) => {
+      const index = roomStatuses[roomId].onlineUsers.findIndex(
+        (user) => user.id === socket.id
+      )
       if (index !== -1) {
-        console.log(`${roomUsers[roomId][index].name} has left room ${roomId}`)
+        console.log(
+          `${roomStatuses[roomId].onlineUsers[index].name} has left room ${roomId}`
+        )
 
         // Remove the user from the room
-        roomUsers[roomId].splice(index, 1)
+        roomStatuses[roomId].onlineUsers.splice(index, 1)
 
-        if (roomUsers[roomId].length === 0) {
-          delete roomUsers[roomId] // Remove the room if empty
+        if (roomStatuses[roomId].onlineUsers.length === 0) {
+          delete roomStatuses[roomId] // Remove the room if empty
         }
       }
     })
-    console.log('room status', roomUsers)
-  })
-
-  // Handle messages from clients
-  socket.on('message', ({ message, roomId, userName }) => {
-    console.log(
-      `received message from ${userName} in room ${roomId}: ${message}`
-    )
-    socket.to(roomId).emit('message', { userName, message })
+    console.log('room status', JSON.stringify(roomStatuses))
   })
 })
 

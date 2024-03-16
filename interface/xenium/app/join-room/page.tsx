@@ -4,8 +4,6 @@ import { useState, useEffect, useContext } from 'react'
 import SocketContext from '@/context/socket/socketContext'
 import { useRouter } from 'next/navigation'
 
-import './style.css'
-
 const JoinRoomPage = () => {
   const [userName, setUserName] = useState('')
   const [roomIdInput, setRoomIdInput] = useState('')

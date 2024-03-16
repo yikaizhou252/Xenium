@@ -31,3 +31,11 @@ body {
     text-wrap: balance;
   }
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 50%;
+  align-self: center;
+}
