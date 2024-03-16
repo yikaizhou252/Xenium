@@ -9,9 +9,8 @@ type SocketProviderProps = {
 }
 
 const SocketProvider = ({ children }: SocketProviderProps) => {
-  console.log("calling abcd")
   const [socket, setSocket] = useState<Socket | null>(null)
-  const [room, setRoom] = useState<string>('')
+  const [roomId, setRoomId] = useState<string>('')
   const joinRoom = useCallback(
     (userName: string, roomId: string) => {
       // establish socket if !socket
@@ -27,22 +26,16 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
           },
         })
 
-        newSocket.on('connect', () => {
-          console.log('connected, redirecting...')
-        })
-
         setSocket(newSocket)
         newSocket.emit('joinRoom', userName, roomId)
-        setRoom(roomId)
       } else {
         socket.emit('joinRoom', userName, roomId)
-        setRoom(roomId)
       }
     },
     [socket]
   )
   return (
-    <SocketContext.Provider value={{ socket, joinRoom }}>
+    <SocketContext.Provider value={{ socket, roomId, joinRoom, setRoomId }}>
       {children}
     </SocketContext.Provider>
   )

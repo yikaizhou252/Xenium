@@ -1,19 +1,33 @@
 'use client'
 
 import { useState, useEffect, useContext } from 'react'
-import SocketContext from '@/context/socket/socketContext' // Adjust the import path as necessary
+import SocketContext from '@/context/socket/socketContext'
+import { useRouter } from 'next/navigation'
+
 import './style.css'
-// import clientHelper from '@/app/api/clientHelper'
 
 const JoinRoomPage = () => {
   const [userName, setUserName] = useState('')
-  const [roomId, setRoomId] = useState('')
+  const [roomIdInput, setRoomIdInput] = useState('')
+  const { socket, joinRoom, setRoomId } = useContext(SocketContext)
+  const router = useRouter()
 
-  const { joinRoom } = useContext(SocketContext)
+  useEffect(() => {
+    if (socket) {
+      socket.on('connect', () => {
+        console.log('connected, joining...', socket.id)
+      })
+      socket.on('joinedRoom', (roomId) => {
+        console.log('joined room: ', roomId)
+        setRoomId(roomId)
+        router.push('/room')
+      })
+    }
+  }, [socket, setRoomId, router])
 
   const handleJoinRoom = () => {
-    if (roomId && userName) {
-      joinRoom(userName, roomId)
+    if (roomIdInput && userName) {
+      joinRoom(userName, roomIdInput)
     }
   }
 
@@ -38,8 +52,8 @@ const JoinRoomPage = () => {
           <input
             type="text"
             className="text-black"
-            value={roomId}
-            onChange={(e) => setRoomId(e.target.value)}
+            value={roomIdInput}
+            onChange={(e) => setRoomIdInput(e.target.value)}
             placeholder="Enter Room ID"
           />
         </div>

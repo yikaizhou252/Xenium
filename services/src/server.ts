@@ -30,6 +30,9 @@ io.on('connection', (socket) => {
     }
     roomUsers[roomId].push({ id: socket.id, name: userName })
 
+    // response for user redirection
+    socket.emit('joinedRoom', roomId)
+
     socket
       .to(roomId)
       .emit('userJoined', `${userName} has joined room ${roomId}`)
@@ -44,7 +47,7 @@ io.on('connection', (socket) => {
       const index = roomUsers[roomId].findIndex((user) => user.id === socket.id)
       if (index !== -1) {
         console.log(`${roomUsers[roomId][index].name} has left room ${roomId}`)
-        
+
         // Remove the user from the room
         roomUsers[roomId].splice(index, 1)
 
