@@ -30,6 +30,7 @@ io.on('connection', (socket) => {
       console.log(`user ${userName} re-entered`)
       return
     }
+  
     roomStatuses[roomId].onlineUsers.push({ id: socket.id, name: userName })
 
     // response for user redirection
@@ -37,7 +38,7 @@ io.on('connection', (socket) => {
 
     socket
       .to(roomId)
-      .emit('userJoined', `${userName} has joined room ${roomId}`)
+      .emit('roomUserStatus', roomStatuses[roomId].onlineUsers)
 
     console.log('room status', JSON.stringify(roomStatuses))
   })

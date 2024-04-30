@@ -1,0 +1,13 @@
+.chatWidget {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+.chatRoom {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.roomStatus {
+  flex-grow: 1;
+}

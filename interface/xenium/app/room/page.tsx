@@ -2,14 +2,23 @@
 import { useState, useEffect, useContext } from 'react'
 import SocketContext from '@/context/socket/socketContext'
 import { useRouter } from 'next/navigation'
+import UserList from '@/component/UserList'
+import MessageList from '@/component/MessageList'
+
+import './style.css'
 interface ChatMessage {
   text: string
   userName: string
+}
+interface RoomUserStatus {
+  id: string
+  name: string
 }
 const RoomPage = () => {
   const { roomId, socket } = useContext(SocketContext)
   const [inputText, setInputText] = useState('')
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([])
+  const [roomUserStatus, setRoomUserStatus] = useState<RoomUserStatus[]>([])
   const router = useRouter()
   useEffect(() => {
     if (!roomId) {
@@ -23,6 +32,10 @@ const RoomPage = () => {
         const message = { text, userName }
         const newChatHistory = [...chatHistory, message]
         setChatHistory(newChatHistory)
+      })
+
+      socket.on('roomUserStatus', (roomUserStatus) => {
+        setRoomUserStatus(roomUserStatus)
       })
     }
   }, [socket, chatHistory])
@@ -38,6 +51,16 @@ const RoomPage = () => {
       <h1 className="flex self-center justify-center font-extrabold text-8xl">
         You are at Room {roomId ? roomId : '...'}
       </h1>
+      
+      <div className="chatWidget">
+        <div className="chatRoom">
+          <MessageList />
+          <div>move input & send button here</div>
+        </div>
+        <div className="roomStatus">
+          <UserList />
+        </div>
+      </div>
       <div className="form">
         <div className="flex gap-3 justify-center">
           <input
