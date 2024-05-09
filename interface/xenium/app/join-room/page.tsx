@@ -7,7 +7,8 @@ import { useRouter } from 'next/navigation'
 const JoinRoomPage = () => {
   const [userName, setUserName] = useState('')
   const [roomIdInput, setRoomIdInput] = useState('')
-  const { socket, joinRoom, setRoomId } = useContext(SocketContext)
+  const { socket, joinRoom, setRoomId, setRoomUserStatus } =
+    useContext(SocketContext)
   const router = useRouter()
 
   useEffect(() => {
@@ -15,13 +16,13 @@ const JoinRoomPage = () => {
       socket.on('connect', () => {
         console.log('connected, joining...', socket.id)
       })
-      socket.on('joinedRoom', (roomId) => {
-        console.log('joined room: ', roomId)
+      socket.on('joinedRoom', ({ id: roomId, roomUserStatus }) => {
         setRoomId(roomId)
+        setRoomUserStatus(roomUserStatus)
         router.push('/room')
       })
     }
-  }, [socket, setRoomId, router])
+  }, [socket, setRoomId, router, setRoomUserStatus])
 
   const handleJoinRoom = () => {
     if (roomIdInput && userName) {

@@ -11,6 +11,8 @@ type SocketProviderProps = {
 const SocketProvider = ({ children }: SocketProviderProps) => {
   const [socket, setSocket] = useState<Socket | null>(null)
   const [roomId, setRoomId] = useState<string>('')
+  const [roomUserStatus, setRoomUserStatus] = useState<RoomUserStatus[]>([])
+
   const joinRoom = useCallback(
     (userName: string, roomId: string) => {
       // establish socket if !socket
@@ -35,7 +37,16 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
     [socket]
   )
   return (
-    <SocketContext.Provider value={{ socket, roomId, joinRoom, setRoomId }}>
+    <SocketContext.Provider
+      value={{
+        socket,
+        roomId,
+        joinRoom,
+        setRoomId,
+        roomUserStatus,
+        setRoomUserStatus,
+      }}
+    >
       {children}
     </SocketContext.Provider>
   )

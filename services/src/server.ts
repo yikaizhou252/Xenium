@@ -30,15 +30,16 @@ io.on('connection', (socket) => {
       console.log(`user ${userName} re-entered`)
       return
     }
-  
+
     roomStatuses[roomId].onlineUsers.push({ id: socket.id, name: userName })
 
     // response for user redirection
-    socket.emit('joinedRoom', roomId)
+    socket.emit('joinedRoom', {
+      id: roomId,
+      roomUserStatus: roomStatuses[roomId].onlineUsers,
+    })
 
-    socket
-      .to(roomId)
-      .emit('roomUserStatus', roomStatuses[roomId].onlineUsers)
+    socket.to(roomId).emit('roomUserStatus', roomStatuses[roomId].onlineUsers)
 
     console.log('room status', JSON.stringify(roomStatuses))
   })
@@ -52,9 +53,7 @@ io.on('connection', (socket) => {
       console.log(`user not found, must be a bug`)
       return
     }
-    console.log(
-      `received message from ${user.name} in room ${roomId}: ${text}`
-    )
+    console.log(`received message from ${user.name} in room ${roomId}: ${text}`)
     // io.to broadcasts to all users in same room
     // socket.to broadcasts to all users except for the sender
     io.to(roomId).emit('message', { userName: user.name, text })
@@ -76,8 +75,10 @@ io.on('connection', (socket) => {
         roomStatuses[roomId].onlineUsers.splice(index, 1)
 
         if (roomStatuses[roomId].onlineUsers.length === 0) {
-          delete roomStatuses[roomId] // Remove the room if empty
+          return delete roomStatuses[roomId] // Remove the room if empty
         }
+
+        io.to(roomId).emit('roomUserStatus', roomStatuses[roomId].onlineUsers)
       }
     })
     console.log('room status', JSON.stringify(roomStatuses))

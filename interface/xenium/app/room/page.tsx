@@ -2,23 +2,16 @@
 import { useState, useEffect, useContext } from 'react'
 import SocketContext from '@/context/socket/socketContext'
 import { useRouter } from 'next/navigation'
-import UserList from '@/component/UserList'
-import MessageList from '@/component/MessageList'
+import { UserList, MessageList, InputRow } from './components'
 
 import './style.css'
-interface ChatMessage {
-  text: string
-  userName: string
-}
-interface RoomUserStatus {
-  id: string
-  name: string
-}
+
 const RoomPage = () => {
-  const { roomId, socket } = useContext(SocketContext)
+  const { roomId, socket, roomUserStatus, setRoomUserStatus } =
+    useContext(SocketContext)
   const [inputText, setInputText] = useState('')
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([])
-  const [roomUserStatus, setRoomUserStatus] = useState<RoomUserStatus[]>([])
+
   const router = useRouter()
   useEffect(() => {
     if (!roomId) {
@@ -38,7 +31,7 @@ const RoomPage = () => {
         setRoomUserStatus(roomUserStatus)
       })
     }
-  }, [socket, chatHistory])
+  }, [socket, chatHistory, setRoomUserStatus])
 
   const handleSendText = () => {
     if (!!inputText && socket) {
@@ -51,36 +44,19 @@ const RoomPage = () => {
       <h1 className="flex self-center justify-center font-extrabold text-8xl">
         You are at Room {roomId ? roomId : '...'}
       </h1>
-      
+
       <div className="chatWidget">
-        <div className="chatRoom">
-          <MessageList />
-          <div>move input & send button here</div>
-        </div>
         <div className="roomStatus">
-          <UserList />
+          <UserList users={roomUserStatus} />
         </div>
-      </div>
-      <div className="form">
-        <div className="flex gap-3 justify-center">
-          <input
-            type="text"
-            className="text-black  p-2"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Let's chat..."
+        <div className="chatRoom">
+          <MessageList messages={chatHistory} />
+          <InputRow
+            inputText={inputText}
+            setInputText={(str) => setInputText(str)}
+            handleSendText={handleSendText}
           />
-          <button className="bg-white text-black px-2" onClick={handleSendText}>
-            Send
-          </button>
         </div>
-      </div>
-      <div>
-        {chatHistory.map((message, index) => (
-          <div key={index}>
-            <strong>{message.userName}:</strong> {message.text}
-          </div>
-        ))}
       </div>
     </div>
   )

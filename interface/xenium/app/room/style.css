@@ -1,13 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .chatWidget {
-  display: flex;
-  flex-direction: row;
+  @apply flex flex-row border-2 rounded-sm;
+  border-color: var(--border-color);
+  box-shadow: 4px 4px 15px 0 var(--border-color-shadow);
   width: 100%;
 }
 .chatRoom {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+  @apply flex flex-col border-r-2;
+  width: 85%;
+  border-color: var(--border-color);
 }
 .roomStatus {
-  flex-grow: 1;
+  @apply grow;
+}
+
+.messageList {
+  @apply py-2 px-4 overflow-y-scroll;
+  height: 300px;
+  .empty {
+    color: var(--support-text);
+  }
+}
+
+.userList {
+  @apply py-2 px-4 overflow-y-scroll;
+  height: 100%;
+}
+
+.inputRow {
+  @apply flex;
+
+  .input {
+    @apply p-2 grow;
+    color: var(--text-inverted);
+  }
+  .button {
+    @apply py-2 px-5 text-lg;
+    background: var(--background-inverted-light);
+  }
 }
