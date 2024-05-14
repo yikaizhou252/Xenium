@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SocketProvider>
-          <div className='main'>{children}</div>
+          <div className="main">{children}</div>
         </SocketProvider>
       </body>
     </html>

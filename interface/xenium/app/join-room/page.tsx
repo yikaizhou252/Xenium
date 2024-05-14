@@ -31,12 +31,12 @@ const JoinRoomPage = () => {
   }
 
   return (
-    <div className="flex gap-3 flex-col justify-center h-screen">
-      <h1 className="flex self-center justify-center font-extrabold text-8xl">
+    <div className="flex h-screen flex-col justify-center gap-3">
+      <h1 className="flex justify-center self-center text-8xl font-extrabold">
         Xenium
       </h1>
       <div className="form">
-        <div className="gap-x-3 flex self-center justify-center rounded-md">
+        <div className="flex justify-center gap-x-3 self-center rounded-md">
           <label>Username:</label>
           <input
             type="text"
@@ -46,7 +46,7 @@ const JoinRoomPage = () => {
             placeholder="Enter your name bruh"
           />
         </div>
-        <div className="gap-x-3 flex self-center justify-center rounded-md">
+        <div className="flex justify-center gap-x-3 self-center rounded-md">
           <label>room:</label>
           <input
             type="text"
@@ -57,7 +57,7 @@ const JoinRoomPage = () => {
           />
         </div>
         <button
-          className="bg-white text-black px-2"
+          className="bg-white px-2 text-black"
           type="submit"
           onClick={handleJoinRoom}
         >

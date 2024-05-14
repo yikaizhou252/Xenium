@@ -40,8 +40,8 @@ const RoomPage = () => {
     setInputText('')
   }
   return (
-    <div className="flex gap-3 flex-col justify-center items-center	 h-screen">
-      <h1 className="flex self-center justify-center font-extrabold text-8xl">
+    <div className="flex h-screen flex-col items-center justify-center	gap-3">
+      <h1 className="flex justify-center self-center text-8xl font-extrabold">
         You are at Room {roomId ? roomId : '...'}
       </h1>
 

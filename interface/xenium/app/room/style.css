@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 .chatWidget {
-  @apply flex flex-row border-2 rounded-sm;
+  @apply flex flex-row rounded-sm border-2;
   border-color: var(--border-color);
   box-shadow: 4px 4px 15px 0 var(--border-color-shadow);
   width: 100%;
 }
 .chatRoom {
-  @apply flex flex-col border-r-2;
+  @apply flex flex-col;
   width: 85%;
   border-color: var(--border-color);
 }
@@ -18,7 +18,7 @@
 }
 
 .messageList {
-  @apply py-2 px-4 overflow-y-scroll;
+  @apply overflow-y-scroll px-4 py-2;
   height: 300px;
   .empty {
     color: var(--support-text);
@@ -26,7 +26,7 @@
 }
 
 .userList {
-  @apply py-2 px-4 overflow-y-scroll;
+  @apply overflow-y-scroll border-r-2 px-4 py-2;
   height: 100%;
 }
 
@@ -34,11 +34,11 @@
   @apply flex;
 
   .input {
-    @apply p-2 grow;
+    @apply grow p-2;
     color: var(--text-inverted);
   }
   .button {
-    @apply py-2 px-5 text-lg;
+    @apply px-5 py-2 text-lg;
     background: var(--background-inverted-light);
   }
 }
